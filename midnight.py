@@ -70,7 +70,6 @@ def get_char(char_name, realm):
 
     return([name, race, char_class, active_spec, faction, realm, profile_picture, profile_url, ilevel, mythics_array, active_spec_name, guild_name, covenant_name])
 
-
 def get_recent_mythic(char_name, realm):
     response = requests.get(f'https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=mythic_plus_recent_runs').text
     json_data = json.loads(response)
@@ -101,119 +100,9 @@ def get_recent_mythic(char_name, realm):
 
     return(dungeon_array)
 
-
 @client.event
 async def on_ready():
     print ('We have logged in as {0.user}' .format(client))
-
-
-#team one
-numbo_one_id = 821218339560488981
-@tasks.loop(hours=12)
-async def team_channel_one():
-    message_channel = client.get_channel(numbo_one_id)
-    print("Team one's character profiles are printed!")
-
-    ranishammer = get_char('Ranishammer', 'Garona')
-    morvin = get_char('Morvin', 'Onyxia')
-    ryuko = get_char('Ryuko', 'Garona')
-    benzo = get_char('Benzonatate', 'Garona')
-
-    team = [ranishammer, morvin, ryuko, benzo]
-
-    team_one = discord.Embed(title="Team One", color=0xe3244a)
-
-    for i in team:
-        team_one.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
-
-    await message_channel.send(embed=team_one)
-
-@team_channel_one.before_loop
-async def before():
-    await client.wait_until_ready()
-    print("Team one is done waiting")
-
-
-#team two
-numbo_two_id = 821218408464777226
-@tasks.loop(hours=12)
-async def team_channel_two():
-    message_channel = client.get_channel(numbo_two_id)
-    print("Team two's character profiles are printed!")
-
-    klotho = get_char('Klotho', 'Garona')
-    lyndane = get_char('Lyndane', 'Onyxia')
-    thanea = get_char('Thanea', 'Burning Blade')
-    trigger = get_char('Trîggêr', 'Garona')
-
-    team = [klotho, lyndane, thanea, trigger]
-
-    team_two = discord.Embed(title='Team Two', color=0xe3244a)
-
-    for i in team:
-        team_two.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
-
-    await message_channel.send(embed=team_two)
-
-@team_channel_two.before_loop
-async def before_two():
-    await client.wait_until_ready()
-    print("Team two is done waiting")
-
-
-#team three
-numbo_three_id = 821249234958417941
-@tasks.loop(hours=12)
-async def team_channel_three():
-    message_channel = client.get_channel(numbo_three_id)
-    print("Team three's character profiles are printed!")
-
-    beane = get_char('Beane', 'Garona')
-    orcien = get_char('Orcien', 'Garona')
-    thiria = get_char('Thirià', 'Garona')
-    donna = get_char('Docterdonna', 'Garona')
-
-    team = [beane, orcien, thiria, donna]
-
-    team_three = discord.Embed(title='Team Three', color=0xe3244a)
-
-    for i in team:
-        team_three.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
-
-    await message_channel.send(embed=team_three)
-
-@team_channel_three.before_loop
-async def before_three():
-    await client.wait_until_ready()
-    print("Team three is done waiting")
-
-
-#team four
-numbo_four_id = 821249261210828851
-@tasks.loop(hours=12)
-async def team_channel_four():
-    message_channel = client.get_channel(numbo_four_id)
-    print("Team four's character profiles are printed!")
-
-    arys = get_char('Arys', 'Onyxia')
-    deku = get_char('Dëku', 'Burning Blade')
-    cereen = get_char('Cereen', 'Garona')
-    valdel = get_char('Valdel', 'Garona')
-
-    team = [arys, deku, cereen, valdel]
-
-    team_four = discord.Embed(title='Team Four', color=0xe3244a)
-
-    for i in team:
-        team_four.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
-
-    await message_channel.send(embed=team_four)
-
-@team_channel_four.before_loop
-async def before_four():
-    await client.wait_until_ready()
-    print("Team four is done waiting")
-
 
 @client.event
 async def on_message(message):
@@ -234,15 +123,14 @@ async def on_message(message):
         await message.channel.send(embed = commands_embed)
 
     if msg.startswith(prefix + 'points'):
-        time = '4:30 AM'
-        points_embed = discord.Embed(title='Current Points', description=f'Updated: March 20th at {time}', color=0xe3244a)
-        points_embed.add_field(name='UTI - 11.5', value='Ranishammer: 2.75\nRyuko: 3.25\nMorvin: 2.75\nBenzo: 2.75', inline=False)
-        points_embed.add_field(name='LFH - 35.25', value='Klotho: 2.25\nTrigger: 9\nLockie: 17.75\nLyndane: 6.25', inline=False)
-        points_embed.add_field(name='Hello Sweetie - 31.25', value='Beane: 9.75\nOrcien: 10.5\nThiria: 5\nDocterdonna: 6', inline=False)
-        points_embed.add_field(name='Arystocrats - 18.75', value='Arys: 3.25\nDeku: 3.75\nCereen: 9\nValdel: 2.75', inline=False)
+        time = '6:30 AM'
+        points_embed = discord.Embed(title='Current Points', description=f'Updated: March 22nd at {time}', color=0xe3244a)
+        points_embed.add_field(name='UTI - 18', value='Ranishammer: 3.75\nRyuko: 5.25\nMorvin: 5.25\nBenzo: 3.75', inline=False)
+        points_embed.add_field(name='LFH - 51.75', value='Klotho: 3.75\nTrigger: 11\nLockie: 29.75\nLyndane: 7.25', inline=False)
+        points_embed.add_field(name='Hello Sweetie - 39.75', value='Beane: 13.75\nOrcien: 13\nThiria: 6.5\nDocterdonna: 6.5', inline=False)
+        points_embed.add_field(name='Arystocrats - 21.25', value='Arys: 3.25\nDeku: 4.75\nCereen: 9.5\nValdel: 3.75', inline=False)
 
         await message.channel.send(embed = points_embed)
-
 
     if msg.startswith(prefix+'char') or msg.startswith(prefix+'character'):
         #ask the name
@@ -342,6 +230,49 @@ async def on_message(message):
 
         await message.channel.send(embed=team_one)
 
+        await message.channel.send('Would you like to see the 10 most recent dungeons that team one did?')
+        try:
+            yes_or_no = await client.wait_for('message', timeout=60)
+        except asyncio.TimeoutError:
+            await message.channel.send('I guess that\'s a no then!')
+        else:
+            if yes_or_no.content.lower() == 'no':
+                await message.channel.send('Okay then!')
+            elif yes_or_no.content.lower() == 'yes':
+                ranish_mythics = get_recent_mythic(ranishammer[0], ranishammer[5])
+                morvin_mythics = get_recent_mythic(morvin[0], morvin[5])
+                ryuko_mythics = get_recent_mythic(ryuko[0], ryuko[5])
+                benzo_mythics = get_recent_mythic(benzo[0], benzo[5])
+
+                ranish_embed = discord.Embed(title='Ranishammer\'s recent dungeons', description=ranishammer[7], color=0xe3244a)
+
+                for i in ranish_mythics:
+                    time_split = i[4][1].split('.')
+                    ranish_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC') 
+
+                morvin_embed = discord.Embed(title='Morvin\'s recent dungeons', description=morvin[7], color=0xe3244a)
+
+                for i in morvin_mythics:
+                    time_split = i[4][1].split('.')
+                    morvin_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+                
+                ryuko_embed = discord.Embed(title='Ryuko\'s recent dungeons', description=ryuko[7], color=0xe3244a)
+
+                for i in ryuko_mythics:
+                    time_split = i[4][1].split('.')
+                    ryuko_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                benzo_embed = discord.Embed(title='Benzonatate\'s recent dungeons', description=benzo[7], color=0xe3244a)
+
+                for i in benzo_mythics:
+                    time_split = i[4][1].split('.')
+                    benzo_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                mythics_array = [ranish_embed, morvin_embed, ryuko_embed, benzo_embed]
+
+                for a in mythics_array:
+                    await message.channel.send(embed = a)
+
     if msg.startswith(prefix+'team two') or msg.startswith(prefix+'team 2'):
         klotho = get_char('Klotho', 'Garona')
         lyndane = get_char('Lyndane', 'Onyxia')
@@ -356,6 +287,49 @@ async def on_message(message):
             team_two.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
 
         await message.channel.send(embed=team_two)
+
+        await message.channel.send('Would you like to see the 10 most recent dungeons that team two did?')
+        try:
+            yes_or_no = await client.wait_for('message', timeout=60)
+        except asyncio.TimeoutError:
+            await message.channel.send('I guess that\'s a no then!')
+        else:
+            if yes_or_no.content.lower() == 'no':
+                await message.channel.send('Okay then!')
+            elif yes_or_no.content.lower() == 'yes':
+                klotho_mythics = get_recent_mythic(klotho[0], klotho[5])
+                lyndane_mythics = get_recent_mythic(lyndane[0], lyndane[5])
+                thanea_mythics = get_recent_mythic(thanea[0], thanea[5])
+                trigger_mythics = get_recent_mythic(trigger[0], trigger[5])
+
+                klotho_embed = discord.Embed(title='Klotho\'s recent dungeons', description=klotho[7], color=0xe3244a)
+
+                for i in klotho_mythics:
+                    time_split = i[4][1].split('.')
+                    klotho_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC') 
+
+                lyndane_embed = discord.Embed(title='Lyndane\'s recent dungeons', description=lyndane[7], color=0xe3244a)
+
+                for i in lyndane_mythics:
+                    time_split = i[4][1].split('.')
+                    lyndane_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+                
+                thanea_embed = discord.Embed(title='Thanea\'s recent dungeons', description=thanea[7], color=0xe3244a)
+
+                for i in thanea_mythics:
+                    time_split = i[4][1].split('.')
+                    thanea_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                trigger_embed = discord.Embed(title='Trigger\'s recent dungeons', description=trigger[7], color=0xe3244a)
+
+                for i in trigger_mythics:
+                    time_split = i[4][1].split('.')
+                    trigger_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                mythics_array = [klotho_embed, lyndane_embed, trigger_embed, thanea_embed]
+
+                for a in mythics_array:
+                    await message.channel.send(embed = a)
 
     if msg.startswith(prefix+'team three') or msg.startswith(prefix+'team 3'):
         beane = get_char('Beane', 'Garona')
@@ -372,6 +346,49 @@ async def on_message(message):
 
         await message.channel.send(embed=team_three)
 
+        await message.channel.send('Would you like to see the 10 most recent dungeons that team two did?')
+        try:
+            yes_or_no = await client.wait_for('message', timeout=60)
+        except asyncio.TimeoutError:
+            await message.channel.send('I guess that\'s a no then!')
+        else:
+            if yes_or_no.content.lower() == 'no':
+                await message.channel.send('Okay then!')
+            elif yes_or_no.content.lower() == 'yes':
+                beane_mythics = get_recent_mythic(beane[0], beane[5])
+                orcien_mythics = get_recent_mythic(orcien[0], orcien[5])
+                thiria_mythics = get_recent_mythic(thiria[0], thiria[5])
+                donna_mythics = get_recent_mythic(donna[0], donna[5])
+
+                beane_embed = discord.Embed(title='Beane\'s recent dungeons', description=beane[7], color=0xe3244a)
+
+                for i in beane_mythics:
+                    time_split = i[4][1].split('.')
+                    beane_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC') 
+
+                orcien_embed = discord.Embed(title='Orcien\'s recent dungeons', description=orcien[7], color=0xe3244a)
+
+                for i in orcien_mythics:
+                    time_split = i[4][1].split('.')
+                    orcien_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+                
+                thiria_embed = discord.Embed(title='Thirià\'s recent dungeons', description=thiria[7], color=0xe3244a)
+
+                for i in thiria_mythics:
+                    time_split = i[4][1].split('.')
+                    thiria_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                donna_embed = discord.Embed(title='Donna\'s recent dungeons', description=donna[7], color=0xe3244a)
+
+                for i in donna_mythics:
+                    time_split = i[4][1].split('.')
+                    donna_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                mythics_array = [beane_embed, orcien_embed, donna_embed, thiria_embed]
+
+                for a in mythics_array:
+                    await message.channel.send(embed = a)
+
     if msg.startswith(prefix+'team four') or msg.startswith(prefix+'team 4'):
         arys = get_char('Arys', 'Onyxia')
         deku = get_char('Dëku', 'Burning Blade')
@@ -386,6 +403,49 @@ async def on_message(message):
             team_four.add_field(name=i[0] + ' - ' + i[8], value=i[7], inline=False)
 
         await message.channel.send(embed=team_four)
+
+        await message.channel.send('Would you like to see the 10 most recent dungeons that team two did?')
+        try:
+            yes_or_no = await client.wait_for('message', timeout=60)
+        except asyncio.TimeoutError:
+            await message.channel.send('I guess that\'s a no then!')
+        else:
+            if yes_or_no.content.lower() == 'no':
+                await message.channel.send('Okay then!')
+            elif yes_or_no.content.lower() == 'yes':
+                arys_mythics = get_recent_mythic(arys[0], arys[5])
+                deku_mythics = get_recent_mythic(deku[0], deku[5])
+                cereen_mythics = get_recent_mythic(cereen[0], cereen[5])
+                valdel_mythics = get_recent_mythic(valdel[0], valdel[5])
+
+                arys_embed = discord.Embed(title='Arys\'s recent dungeons', description=arys[7], color=0xe3244a)
+
+                for i in arys_mythics:
+                    time_split = i[4][1].split('.')
+                    arys_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC') 
+
+                deku_embed = discord.Embed(title='Deku\'s recent dungeons', description=deku[7], color=0xe3244a)
+
+                for i in deku_mythics:
+                    time_split = i[4][1].split('.')
+                    deku_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+                
+                cereen_embed = discord.Embed(title='Cereen\'s recent dungeons', description=cereen[7], color=0xe3244a)
+
+                for i in cereen_mythics:
+                    time_split = i[4][1].split('.')
+                    cereen_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                valdel_embed = discord.Embed(title='Valdel\'s recent dungeons', description=valdel[7], color=0xe3244a)
+
+                for i in valdel_mythics:
+                    time_split = i[4][1].split('.')
+                    valdel_embed.add_field(name=i[0] + ' +' + i[1], value='Keystone Upgrade: ' + i[2] + '\nTime: ' + i[3] + '\nCompleted ' + i[4][0] + ' at ' + time_split[0] + ' UTC')
+
+                mythics_array = [arys_embed, deku_embed, valdel_embed, cereen_embed]
+
+                for a in mythics_array:
+                    await message.channel.send(embed = a)
 
     if msg.startswith(prefix+'can\'t touch this') or msg.startswith(prefix+'cant touch this'):
         await message.channel.send('youtube.com/watch?v=t2pw2bujsKc')
