@@ -1,8 +1,7 @@
 import discord
-import json
-import requests
 import asyncio
 import datetime
+import midnight_methods
 
 from dotenv import load_dotenv
 import os
@@ -13,92 +12,6 @@ load_dotenv('midnight.env')
 
 client = discord.Client()
 prefix = '?'
-
-def get_char(char_name, realm):
-    response = requests.get(f"https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=gear").text
-
-    json_data = json.loads(response)
-
-    #basic information
-    name = json_data['name'] #0
-    race = json_data['race'] #1
-    char_class = json_data['class'] #2
-    active_spec = json_data['active_spec_role'] #3
-    faction = json_data['faction'] #4
-    realm = json_data['realm'] #5
-    profile_picture = json_data['thumbnail_url'] #6
-    profile_url = json_data['profile_url'] #7
-    active_spec_name = json_data['active_spec_name'] #10
-
-    #gear
-    ilevel = str(json_data['gear']['item_level_equipped']) #8
-
-    #mythic plus
-    mythics = requests.get(f"https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=mythic_plus_recent_runs").text
-    json_mythics = json.loads(mythics)
-
-    dungeon = json_mythics['mythic_plus_recent_runs'][0]
-
-    time_milli = dungeon['clear_time_ms']
-    seconds = int((time_milli/1000)%60)
-    minutes = int((time_milli/(1000*60))%60)
-    hours = int((time_milli/(1000*60*60))%24)
-
-    dung_name = dungeon['dungeon'] #0
-    mythic_lvl = str(dungeon['mythic_level']) #1
-    keys_upgrade = str(dungeon['num_keystone_upgrades']) #2
-    time_stamp = dungeon['completed_at'].split('T') #4
-
-    if hours == 0:
-        time = f'{minutes} minutes and {seconds} seconds' #3
-    else:
-        time = f"{hours} hours {minutes} minutes and {seconds} seconds" #3
-    
-    mythics_array = [dung_name, mythic_lvl, keys_upgrade, time, time_stamp] #9
-
-    #guild
-    guild = requests.get(f"https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=guild").text
-    json_guild = json.loads(guild)
-
-    guild_name = json_guild['guild']['name'] #11
-
-    #covenant
-    covenant = requests.get(f"https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=covenant").text
-    json_cov = json.loads(covenant)
-
-    covenant_name = json_cov['covenant']['name'] #12
-
-    return([name, race, char_class, active_spec, faction, realm, profile_picture, profile_url, ilevel, mythics_array, active_spec_name, guild_name, covenant_name])
-
-def get_recent_mythic(char_name, realm):
-    response = requests.get(f'https://raider.io/api/v1/characters/profile?region=us&realm={realm}&name={char_name}&fields=mythic_plus_recent_runs').text
-    json_data = json.loads(response)
-
-    dungeon_array = []
-
-    for dungeon in json_data['mythic_plus_recent_runs']:
-        time_milli = dungeon['clear_time_ms']   
-        seconds = int((time_milli/1000)%60)
-        minutes = int((time_milli/(1000*60))%60)
-        hours = int((time_milli/(1000*60*60))%24)
-
-        if hours == 0:
-            time = f'{minutes} minutes and {seconds} seconds'
-        else:
-            time = f'{hours} hours {minutes} minutes and {seconds} seconds'
-
-        name = dungeon['dungeon'] #0
-        mythic_lvl = str(dungeon['mythic_level']) #1
-        keystone_upgrade = str(dungeon['num_keystone_upgrades']) #2
-        #time is 3
-        time_stamp = dungeon['completed_at'].split('T') #4
-
-
-        individual_dungeon = [name, mythic_lvl, keystone_upgrade, time, time_stamp]
-
-        dungeon_array.append(individual_dungeon)
-
-    return(dungeon_array)
 
 @client.event
 async def on_ready():
@@ -161,7 +74,7 @@ async def on_message(message):
             if realm_and_character[0] == 'thiria':
                 realm_and_character[0] = 'Thirià'
 
-            character = get_char(realm_and_character[0], realm_and_character[1])
+            character = midnight_methods.get_char(realm_and_character[0], realm_and_character[1])
 
             char_embed = discord.Embed(title=character[1] + ', '+ character[10] + ' ' + character[2], description= '<' + character[11] + '>, ' + character[5], color=0x368cff)
             char_embed.set_author(name=character[0] + ' - ' + character[3], icon_url=character[6])
@@ -204,8 +117,8 @@ async def on_message(message):
             if realm_and_character[0] == 'thiria':
                 realm_and_character[0] = 'Thirià'
 
-            mythics = get_recent_mythic(realm_and_character[0], realm_and_character[1])
-            character = get_char(realm_and_character[0], realm_and_character[1])
+            mythics = midnight_methods.get_recent_mythic(realm_and_character[0], realm_and_character[1])
+            character = midnight_methods.get_char(realm_and_character[0], realm_and_character[1])
 
             mythics_embed = discord.Embed(title=f'{character[0]}\'s recent dungeons', description=character[7] + '\nTIMESTAMPS ARE IN UTC TIMEZONE (5 HOURS AHEAD OF CST)',color=0x77d45d)
 
@@ -216,10 +129,10 @@ async def on_message(message):
             await message.channel.send(embed = mythics_embed)
 
     if msg.startswith(prefix+'team one') or msg.startswith(prefix+'team 1'):
-        ranishammer = get_char('Ranishammer', 'Garona')
-        morvin = get_char('Morvin', 'Onyxia')
-        ryuko = get_char('Ryuko', 'Garona')
-        benzo = get_char('Benzonatate', 'Garona')
+        ranishammer = midnight_methods.get_char('Ranishammer', 'Garona')
+        morvin = midnight_methods.get_char('Morvin', 'Onyxia')
+        ryuko = midnight_methods.get_char('Ryuko', 'Garona')
+        benzo = midnight_methods.get_char('Benzonatate', 'Garona')
 
         team = [ranishammer, morvin, ryuko, benzo]
 
@@ -239,10 +152,10 @@ async def on_message(message):
             if yes_or_no.content.lower() == 'no':
                 await message.channel.send('Okay then!')
             elif yes_or_no.content.lower() == 'yes':
-                ranish_mythics = get_recent_mythic(ranishammer[0], ranishammer[5])
-                morvin_mythics = get_recent_mythic(morvin[0], morvin[5])
-                ryuko_mythics = get_recent_mythic(ryuko[0], ryuko[5])
-                benzo_mythics = get_recent_mythic(benzo[0], benzo[5])
+                ranish_mythics = midnight_methods.get_recent_mythic(ranishammer[0], ranishammer[5])
+                morvin_mythics = midnight_methods.get_recent_mythic(morvin[0], morvin[5])
+                ryuko_mythics = midnight_methods.get_recent_mythic(ryuko[0], ryuko[5])
+                benzo_mythics = midnight_methods.get_recent_mythic(benzo[0], benzo[5])
 
                 ranish_embed = discord.Embed(title='Ranishammer\'s recent dungeons', description=ranishammer[7], color=0xe3244a)
 
@@ -274,10 +187,10 @@ async def on_message(message):
                     await message.channel.send(embed = a)
 
     if msg.startswith(prefix+'team two') or msg.startswith(prefix+'team 2'):
-        klotho = get_char('Klotho', 'Garona')
-        lyndane = get_char('Lyndane', 'Onyxia')
-        thanea = get_char('Thanea', 'Burning Blade')
-        trigger = get_char('Trîggêr', 'Garona')
+        klotho = midnight_methods.get_char('Klotho', 'Garona')
+        lyndane = midnight_methods.get_char('Lyndane', 'Onyxia')
+        thanea = midnight_methods.get_char('Thanea', 'Burning Blade')
+        trigger = midnight_methods.get_char('Trîggêr', 'Garona')
 
         team = [klotho, lyndane, thanea, trigger]
 
@@ -297,10 +210,10 @@ async def on_message(message):
             if yes_or_no.content.lower() == 'no':
                 await message.channel.send('Okay then!')
             elif yes_or_no.content.lower() == 'yes':
-                klotho_mythics = get_recent_mythic(klotho[0], klotho[5])
-                lyndane_mythics = get_recent_mythic(lyndane[0], lyndane[5])
-                thanea_mythics = get_recent_mythic(thanea[0], thanea[5])
-                trigger_mythics = get_recent_mythic(trigger[0], trigger[5])
+                klotho_mythics = midnight_methods.get_recent_mythic(klotho[0], klotho[5])
+                lyndane_mythics = midnight_methods.get_recent_mythic(lyndane[0], lyndane[5])
+                thanea_mythics = midnight_methods.get_recent_mythic(thanea[0], thanea[5])
+                trigger_mythics = midnight_methods.get_recent_mythic(trigger[0], trigger[5])
 
                 klotho_embed = discord.Embed(title='Klotho\'s recent dungeons', description=klotho[7], color=0xe3244a)
 
@@ -332,10 +245,10 @@ async def on_message(message):
                     await message.channel.send(embed = a)
 
     if msg.startswith(prefix+'team three') or msg.startswith(prefix+'team 3'):
-        beane = get_char('Beane', 'Garona')
-        orcien = get_char('Orcien', 'Garona')
-        thiria = get_char('Thirià', 'Garona')
-        donna = get_char('Docterdonna', 'Garona')
+        beane = midnight_methods.get_char('Beane', 'Garona')
+        orcien = midnight_methods.get_char('Orcien', 'Garona')
+        thiria = midnight_methods.get_char('Thirià', 'Garona')
+        donna = midnight_methods.get_char('Docterdonna', 'Garona')
 
         team = [beane, orcien, thiria, donna]
 
@@ -355,10 +268,10 @@ async def on_message(message):
             if yes_or_no.content.lower() == 'no':
                 await message.channel.send('Okay then!')
             elif yes_or_no.content.lower() == 'yes':
-                beane_mythics = get_recent_mythic(beane[0], beane[5])
-                orcien_mythics = get_recent_mythic(orcien[0], orcien[5])
-                thiria_mythics = get_recent_mythic(thiria[0], thiria[5])
-                donna_mythics = get_recent_mythic(donna[0], donna[5])
+                beane_mythics = midnight_methods.get_recent_mythic(beane[0], beane[5])
+                orcien_mythics = midnight_methods.get_recent_mythic(orcien[0], orcien[5])
+                thiria_mythics = midnight_methods.get_recent_mythic(thiria[0], thiria[5])
+                donna_mythics = midnight_methods.get_recent_mythic(donna[0], donna[5])
 
                 beane_embed = discord.Embed(title='Beane\'s recent dungeons', description=beane[7], color=0xe3244a)
 
@@ -390,10 +303,10 @@ async def on_message(message):
                     await message.channel.send(embed = a)
 
     if msg.startswith(prefix+'team four') or msg.startswith(prefix+'team 4'):
-        arys = get_char('Arys', 'Onyxia')
-        deku = get_char('Dëku', 'Burning Blade')
-        cereen = get_char('Cereen', 'Garona')
-        valdel = get_char('Valdel', 'Garona')
+        arys = midnight_methods.get_char('Arys', 'Onyxia')
+        deku = midnight_methods.get_char('Dëku', 'Burning Blade')
+        cereen = midnight_methods.get_char('Cereen', 'Garona')
+        valdel = midnight_methods.get_char('Valdel', 'Garona')
 
         team = [arys, deku, cereen, valdel]
 
@@ -413,10 +326,10 @@ async def on_message(message):
             if yes_or_no.content.lower() == 'no':
                 await message.channel.send('Okay then!')
             elif yes_or_no.content.lower() == 'yes':
-                arys_mythics = get_recent_mythic(arys[0], arys[5])
-                deku_mythics = get_recent_mythic(deku[0], deku[5])
-                cereen_mythics = get_recent_mythic(cereen[0], cereen[5])
-                valdel_mythics = get_recent_mythic(valdel[0], valdel[5])
+                arys_mythics = midnight_methods.get_recent_mythic(arys[0], arys[5])
+                deku_mythics = midnight_methods.get_recent_mythic(deku[0], deku[5])
+                cereen_mythics = midnight_methods.get_recent_mythic(cereen[0], cereen[5])
+                valdel_mythics = midnight_methods.get_recent_mythic(valdel[0], valdel[5])
 
                 arys_embed = discord.Embed(title='Arys\'s recent dungeons', description=arys[7], color=0xe3244a)
 
@@ -449,13 +362,5 @@ async def on_message(message):
 
     if msg.startswith(prefix+'can\'t touch this') or msg.startswith(prefix+'cant touch this'):
         await message.channel.send('youtube.com/watch?v=t2pw2bujsKc')
-
-    if msg.startswith(prefix+'hello'):
-        await message.channel.send('Hello sweetie ;)')
-
-#team_channel_one.start()
-#team_channel_two.start()
-#team_channel_three.start()
-#team_channel_four.start()
 
 client.run(os.getenv('DISCORD_TOKEN'))
